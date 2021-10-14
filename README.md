@@ -1,49 +1,98 @@
 # data-process2
 
 import os
+
 import numpy as np
+
 import pandas as pd
+
 import seaborn as sns
+
 from scipy.stats import norm
+
 from collections import Counter
+
 import matplotlib.pyplot as plt
+
 import sklearn
+
 from sklearn import tree
+
 from sklearn.svm import SVC
+
 from sklearn.metrics import roc_curve
+
 from imblearn.pipeline import Pipeline
+
 from imblearn.over_sampling import SMOTE
+
 from sklearn.ensemble import StackingClassifier
+
 from sklearn.metrics import classification_report
+
 from sklearn.ensemble import RandomForestClassifier
+
 from sklearn.linear_model import LogisticRegression
+
 from sklearn.model_selection import cross_val_predict
+
 from sklearn.model_selection import RandomizedSearchCV
+
 from sklearn.model_selection import KFold, cross_validate
+
 from sklearn.metrics import recall_score, f1_score, roc_auc_score
+
 from imblearn.pipeline import make_pipeline as imbalanced_make_pipeline
+
 from sklearn.metrics import precision_recall_curve, average_precision_score
+
 from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedKFold
+
 from sklearn.metrics import confusion_matrix, accuracy_score, precision_score
+
 import xgboost as xgb
+
 from sklearn.pipeline import make_pipeline
+
 from sklearn.model_selection import train_test_split
+
 from sklearn.model_selection import StratifiedShuffleSplit
 
+
+
+
+
+
+
+
 data=pd.read_csv("Desktop\论文材料\data.csv")
+
 data
 
+
+
+
+
 cor_matrix = data.corr().abs()
+
 cor_matrix.style.background_gradient(sns.light_palette('red', as_cmap=True))
 
 
+
+
+
 upper_tri = cor_matrix.where(np.triu(np.ones(cor_matrix.shape),k=1).astype(np.bool))
+
 dropped_cols = set()
+
 for feature in upper_tri.columns:
     if any(upper_tri[feature] > 0.9): 
         dropped_cols.add(feature)
+        
 print("There are %d dropped columns" %len(dropped_cols))
+
 no_correlated_data = data.drop(dropped_cols,axis=1)
+
 no_correlated_data.head()
 
 
