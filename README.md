@@ -63,7 +63,6 @@ features_pc
 
 new_df=pd.concat([pd.DataFrame(labels),features_pc],axis=1,sort=False)
 new_df
-
 labels = new_df['Bankrupt?']
 last_features= new_df.drop(['Bankrupt?'], axis = 1)
 
@@ -78,13 +77,10 @@ X_raw,X_test,y_raw,y_test  = train_test_split(last_features,
                                               random_state = 42)
 
 sss = StratifiedKFold(n_splits=5,random_state=None,shuffle=False)
-
-for train_index, test_index in sss.split(X_raw,y_raw):
-    
+for train_index, test_index in sss.split(X_raw,y_raw):    
     print("Train:", train_index, "Test:", test_index)
     X_train_sm, X_val_sm = X_raw.iloc[train_index], X_raw.iloc[test_index]
     y_train_sm, y_val_sm = y_raw.iloc[train_index], y_raw.iloc[test_index]
-
 X_train_sm = X_train_sm.values
 X_val_sm = X_val_sm.values
 y_train_sm = y_train_sm.values
@@ -92,17 +88,19 @@ y_val_sm = y_val_sm.values
 train_unique_label, train_counts_label = np.unique(y_train_sm, return_counts=True)
 test_unique_label, test_counts_label = np.unique(y_val_sm, return_counts=True)
 print('-' * 84)
-
 print('Label Distributions: \n')
 print(train_counts_label/ len(y_train_sm))
 print(test_counts_label/ len(y_val_sm))
+
+
+
+
 
 accuracy_lst_reg = []
 precision_lst_reg = []
 recall_lst_reg = []
 f1_lst_reg = []
 auc_lst_reg = []
-
 log_reg_sm = LogisticRegression()
 #log_reg_params = {}
 log_reg_params = {"penalty": ['l2'],
@@ -110,8 +108,6 @@ log_reg_params = {"penalty": ['l2'],
                   'class_weight': ['balanced',None],
                   'solver':['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga']}
 rand_log_reg = RandomizedSearchCV(LogisticRegression(), log_reg_params, n_iter=4)
-
-
 for train, val in sss.split(X_train_sm, y_train_sm):
     pipeline_reg = imbalanced_make_pipeline(SMOTE(sampling_strategy='minority'), rand_log_reg) 
     model_reg = pipeline_reg.fit(X_train_sm[train], y_train_sm[train])
@@ -133,9 +129,14 @@ print("f1: {}".format(np.mean(f1_lst_reg)))
 print('')
 print('---' * 45)
 
-len(y_train_sm[train])
 
+
+
+len(y_train_sm[train])
 len(X_train_sm[train])
+
+
+
 
 label = ['Fin.Stable', 'Fin.Unstable']
 pred_reg_sm = best_est_reg.predict(X_val_sm)
